@@ -11,8 +11,14 @@ function ($scope) {
   ];
   $scope.addPost = function() {
     if ($scope.title === '') { return; } // Don't allow empty title!
-    $scope.posts.push({title: $scope.title, upvotes: 0});
-    $scope.title = ''; // Clear title for next post.
+    $scope.posts.push({
+      title: $scope.title, 
+      link: $scope.link,
+      upvotes: 0
+    });
+    // Clear title and link for next post.
+    $scope.title = '';
+    $scope.link = '';
   };
   $scope.incrementUpvotes = function(post) {
     post.upvotes += 1;
