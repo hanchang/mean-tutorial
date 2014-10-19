@@ -4,9 +4,9 @@ angular.module('reNews', [])
 function ($scope) {
   $scope.test = 'Hello world!';
   $scope.posts = [
-    'Housing starts on the rise',
-    'Interest rates at all time low',
-    'Population growth stabilizing',
-    'Proposition G in SF still being debated'
+    { title: 'Housing starts on the rise', upvotes: 3 },
+    { title: 'Interest rates at all time low', upvotes: 6 },
+    { title: 'Population growth stabilizing', upvotes: 1 },
+    { title: 'Proposition G in SF still being debated', upvotes: 9 }
   ];
 }]);
