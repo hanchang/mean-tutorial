@@ -6,6 +6,11 @@ function($stateProvider, $urlRouterProvider) {
   $stateProvider.state('home', {
     url: '/home',
     templateUrl: '/home.html',
+    resolve: {
+      postPromise: ['posts', function(posts){
+        return posts.getAll();
+      }]
+    },
     controller: 'MainCtrl'
   });
   $stateProvider.state('posts', {
@@ -16,11 +21,16 @@ function($stateProvider, $urlRouterProvider) {
 
   $urlRouterProvider.otherwise('home');
 }])
-.factory('posts', [function() {
+.factory('posts', ['$http', function($http) {
   // Use an object instead of just the posts array so we can 
   // easily add new objects and methods in the future!
   var obj = {
     posts: []
+  };
+  obj.getAll = function() {
+    return $http.get('/posts').success(function(data) {
+      angular.copy(data, obj.posts);
+    });
   };
   return obj;
 }])
