@@ -37,6 +37,11 @@ function($stateProvider, $urlRouterProvider) {
       obj.posts.push(data);
     });
   };
+  obj.upvote = function(post) {
+    return $http.put('/posts/' + post._id + '/upvote').success(function(data) {
+      post.upvotes += 1;
+    });
+  };
   return obj;
 }])
 .controller('MainCtrl', [
@@ -56,7 +61,7 @@ function ($scope, posts) {
     $scope.link = '';
   };
   $scope.incrementUpvotes = function(post) {
-    post.upvotes += 1;
+    posts.upvote(post);
   };
 }])
 .controller('PostsCtrl', [
