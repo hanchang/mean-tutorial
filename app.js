@@ -1,14 +1,18 @@
 angular.module('reNews', [])
+.factory('posts', [function() {
+  // Use an object instead of just the posts array so we can 
+  // easily add new objects and methods in the future!
+  var obj = {
+    posts: []
+  };
+  return obj;
+}])
 .controller('MainCtrl', [
 '$scope',
-function ($scope) {
+'posts',
+function ($scope, posts) {
   $scope.test = 'Hello world!';
-  $scope.posts = [
-    { title: 'Housing starts on the rise', upvotes: 3 },
-    { title: 'Interest rates at all time low', upvotes: 6 },
-    { title: 'Population growth stabilizing', upvotes: 1 },
-    { title: 'Proposition G in SF still being debated', upvotes: 9 }
-  ];
+  $scope.posts = posts.posts;
   $scope.addPost = function() {
     if ($scope.title === '') { return; } // Don't allow empty title!
     $scope.posts.push({
