@@ -16,6 +16,11 @@ function($stateProvider, $urlRouterProvider) {
   $stateProvider.state('posts', {
     url: '/posts/{id}',
     templateUrl: '/posts.html',
+    resolve: {
+      post: ['$stateParams', 'posts', function($stateParams, posts) {
+        return posts.get($stateParams.id);
+      }]
+    },
     controller: 'PostsCtrl'
   });
 
@@ -32,6 +37,11 @@ function($stateProvider, $urlRouterProvider) {
       angular.copy(data, obj.posts);
     });
   };
+  obj.get = function(post_id) {
+    return $http.get('/posts/' + post_id).then(function(res) {
+      return res.data;
+    });
+  };
   obj.create = function(post) {
     return $http.post('/posts', post).success(function(data) {
       obj.posts.push(data);
@@ -42,13 +52,21 @@ function($stateProvider, $urlRouterProvider) {
       post.upvotes += 1;
     });
   };
+  obj.addComment = function(post_id, comment) {
+    return $http.post('/posts/' + post_id + '/comments', comment);
+  };
+  obj.upvoteComment = function(post, comment) {
+    return $http.put('/posts/' + post._id + '/comments/'+ comment._id + '/upvote')
+      .success(function(data) {
+        comment.upvotes += 1;
+      });
+  };
   return obj;
 }])
 .controller('MainCtrl', [
 '$scope',
 'posts',
 function ($scope, posts) {
-  $scope.test = 'Hello world!';
   $scope.posts = posts.posts;
   $scope.addPost = function() {
     if ($scope.title === '') { return; } // Don't allow empty title!
@@ -68,15 +86,20 @@ function ($scope, posts) {
 '$scope',
 '$stateParams',
 'posts',
-function($scope, $stateParams, posts) {
-  $scope.post = posts.posts[$stateParams.id];
+'post',
+function($scope, posts, post) {
+  $scope.post = post;
   $scope.addComment = function() {
     if ($scope.body === '') { return; }
-    $scope.post.comments.push({
+    posts.addComment(post._id, {
       body: $scope.body,
       author: 'user',
-      upvotes: 0
+    }).success(function(comment) {
+      $scope.post.comments.push(comment);
     });
     $scope.body = '';
-  }
+  };
+  $scope.incrementUpvotes = function(comment) {
+    posts.upvoteComment(post, comment);
+  };
 }]);
