@@ -1,4 +1,4 @@
-angular.module('reNews', [])
+angular.module('reNews', ['ui.router'])
 .factory('posts', [function() {
   // Use an object instead of just the posts array so we can 
   // easily add new objects and methods in the future!
