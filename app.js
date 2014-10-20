@@ -1,4 +1,16 @@
 angular.module('reNews', ['ui.router'])
+.config([
+'$stateProvider',
+'$urlRouterProvider',
+function($stateProvider, $urlRouterProvider) {
+  $stateProvider.state('home', {
+    url: '/home',
+    templateUrl: '/home.html',
+    controller: 'MainCtrl'
+  });
+
+  $urlRouterProvider.otherwise('home');
+}])
 .factory('posts', [function() {
   // Use an object instead of just the posts array so we can 
   // easily add new objects and methods in the future!
