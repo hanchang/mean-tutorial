@@ -32,6 +32,11 @@ function($stateProvider, $urlRouterProvider) {
       angular.copy(data, obj.posts);
     });
   };
+  obj.create = function(post) {
+    return $http.post('/posts', post).success(function(data) {
+      obj.posts.push(data);
+    });
+  };
   return obj;
 }])
 .controller('MainCtrl', [
@@ -42,15 +47,9 @@ function ($scope, posts) {
   $scope.posts = posts.posts;
   $scope.addPost = function() {
     if ($scope.title === '') { return; } // Don't allow empty title!
-    $scope.posts.push({
-      title: $scope.title, 
+    posts.create({
+      title: $scope.title,
       link: $scope.link,
-      upvotes: 0,
-      // Temporary fake comments for testing
-      comments: [
-        { author: 'Joe', body: 'Cool post!', upvotes: 0 },
-        { author: 'Bob', body: 'Great idea but everything is wrong!', upvotes: 0 }
-      ]
     });
     // Clear title and link for next post.
     $scope.title = '';
